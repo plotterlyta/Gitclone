@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>GitClone — Android Security Toolkit</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg1:#0d1117;--bg2:#0b1220;
+  --glass-bg:rgba(255,255,255,0.04);
+  --glass-stroke:rgba(255,255,255,0.07);
+  --accent:#2ea44f;--accent-glow:rgba(46,164,79,0.2);
+  --accent-dim:#238636;
+  --muted:rgba(255,255,255,0.6);
+  --text:#e6edf3;
+  --subtle:rgba(255,255,255,0.08);
+  --code-bg:rgba(0,0,0,0.35);
+  font-family:'Inter',system-ui,sans-serif;
+}
+html,body{min-height:100%;color:var(--text);background:linear-gradient(160deg,#0d1117 0%,#0b1220 100%)}
+body{background-image:radial-gradient(ellipse 900px 500px at 5% 0%,rgba(46,164,79,0.07),transparent),radial-gradient(ellipse 600px 400px at 95% 80%,rgba(46,100,200,0.04),transparent)}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);background:rgba(13,17,23,0.88);border-bottom:1px solid var(--glass-stroke)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:58px;max-width:1100px;margin:0 auto;padding:0 20px}
+.logo{font-weight:700;font-size:17px;letter-spacing:.3px;display:flex;align-items:center;gap:8px}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent-glow)}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-links a{text-decoration:none;color:var(--muted);font-size:13.5px;padding:6px 12px;border-radius:8px;transition:all .18s}
+.nav-links a:hover{color:var(--text);background:var(--subtle)}
+.nav-badge{background:var(--accent-glow);border:1px solid rgba(46,164,79,0.3);color:var(--accent);font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600;letter-spacing:.3px}
+.menu-btn{display:none;width:36px;height:36px;border-radius:9px;border:1px solid var(--glass-stroke);align-items:center;justify-content:center;background:var(--subtle);cursor:pointer;color:var(--text)}
+.mobile-menu{display:none;flex-direction:column;gap:2px;padding:10px;background:rgba(13,17,23,0.98);border:1px solid var(--glass-stroke);border-radius:12px;position:absolute;top:64px;right:16px;min-width:180px;z-index:200}
+.mobile-menu a{text-decoration:none;color:var(--muted);font-size:14px;padding:10px 14px;border-radius:8px}
+.mobile-menu a:hover{background:var(--subtle);color:var(--text)}
+.mobile-menu.open{display:flex}
+
+/* CONTAINER */
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+
+/* GLASS CARD */
+.glass{background:var(--glass-bg);border:1px solid var(--glass-stroke);border-radius:16px;backdrop-filter:blur(8px)}
+
+/* SECTIONS */
+section{margin:28px auto;max-width:1100px;padding:0 20px}
+
+/* HERO */
+.hero-wrap{display:grid;grid-template-columns:1fr;gap:24px;padding:32px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.hero-eyebrow::before{content:'';display:block;width:18px;height:1px;background:var(--accent)}
+.hero h2{font-size:clamp(22px,4vw,34px);font-weight:700;line-height:1.25;margin-bottom:14px;letter-spacing:-.3px}
+.hero h2 span{color:var(--accent)}
+.hero-desc{font-size:15px;color:var(--muted);line-height:1.7;max-width:460px}
+.meta-row{display:flex;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap}
+.meta-pill{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);background:var(--subtle);border-radius:20px;padding:4px 10px}
+.meta-pill i{color:var(--accent);font-size:10px}
+.cta-row{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;transition:all .18s;cursor:pointer;border:none}
+.btn.primary{background:var(--accent);color:#021a0e;box-shadow:0 0 20px rgba(46,164,79,0.25)}
+.btn.primary:hover{background:#3ac95f;transform:translateY(-1px);box-shadow:0 4px 24px rgba(46,164,79,0.35)}
+.btn.outline{background:var(--subtle);border:1px solid var(--glass-stroke);color:var(--text)}
+.btn.outline:hover{background:rgba(255,255,255,0.09);transform:translateY(-1px)}
+
+/* TERMINAL CARD */
+.terminal-card{background:var(--code-bg);border:1px solid var(--glass-stroke);border-radius:14px;overflow:hidden;font-family:'JetBrains Mono',monospace}
+.terminal-top{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--glass-stroke);background:rgba(255,255,255,0.02)}
+.dot{width:11px;height:11px;border-radius:50%}
+.dot.red{background:#ff5f56}.dot.yellow{background:#ffbd2e}.dot.green{background:#27c93f}
+.terminal-body{padding:16px;font-size:12.5px;line-height:1.9;color:#8b949e}
+.terminal-body .key{color:#58a6ff}.terminal-body .val{color:#aff7b3}
+.terminal-body .comment{color:#484f58}
+.terminal-icons{display:flex;align-items:center;gap:16px;padding:12px 16px;border-top:1px solid var(--glass-stroke)}
+
+/* STATS STRIP */
+.stats-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--glass-stroke);border:1px solid var(--glass-stroke);border-radius:14px;overflow:hidden;margin:0 20px}
+.stat{background:var(--bg1);padding:16px;text-align:center}
+.stat-num{font-size:22px;font-weight:700;color:var(--text)}
+.stat-label{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:.3px}
+
+/* SCREENSHOTS */
+.screenshots-section{padding:28px}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.section-title{font-size:18px;font-weight:700}
+.section-line{flex:1;height:1px;background:var(--glass-stroke)}
+.screenshot-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.screenshot-wrap{border-radius:10px;overflow:hidden;border:1px solid var(--glass-stroke);aspect-ratio:9/16;background:var(--code-bg);display:flex;align-items:center;justify-content:center;position:relative}
+.screenshot-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.screenshot-wrap .placeholder{color:var(--muted);font-size:12px;text-align:center;padding:20px}
+.screenshot-wrap .placeholder i{display:block;font-size:24px;margin-bottom:8px;opacity:.4}
+
+/* FEATURES */
+.features-section{padding:28px}
+.feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:4px}
+.feature{padding:18px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid var(--glass-stroke);transition:border-color .2s,background .2s}
+.feature:hover{border-color:rgba(46,164,79,0.25);background:rgba(46,164,79,0.04)}
+.feature-icon{width:34px;height:34px;border-radius:9px;background:rgba(46,164,79,0.1);border:1px solid rgba(46,164,79,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.feature-icon i{color:var(--accent);font-size:14px}
+.feature h4{font-size:14px;font-weight:600;margin-bottom:6px}
+.feature p{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* JOIN */
+.join-section{padding:28px}
+.join-inner{display:grid;grid-template-columns:1fr;gap:20px}
+.join-left p{font-size:14px;color:var(--muted);line-height:1.7;margin-top:8px}
+.join-form{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.join-form input{flex:1;min-width:200px;padding:10px 14px;border-radius:10px;border:1px solid var(--glass-stroke);background:rgba(255,255,255,0.04);color:var(--text);font-size:14px;outline:none;font-family:inherit}
+.join-form input:focus{border-color:rgba(46,164,79,0.4);background:rgba(46,164,79,0.04)}
+.join-form input::placeholder{color:var(--muted)}
+.join-links{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.link-pill{display:inline-flex;align-items:center;gap:7px;text-decoration:none;font-size:13px;color:var(--muted);padding:7px 14px;border-radius:20px;border:1px solid var(--glass-stroke);transition:all .18s}
+.link-pill:hover{color:var(--text);border-color:rgba(255,255,255,0.15);background:var(--subtle)}
+.link-pill i{font-size:13px}
+.link-pill.tg i{color:#2aabee}
+
+/* MORE */
+.more-section{padding:28px}
+.more-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:4px}
+.more-item{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid var(--glass-stroke)}
+.more-item i{color:var(--accent);font-size:13px;width:16px;text-align:center}
+.more-item.notice{grid-column:1/-1;border-color:rgba(46,164,79,0.2);background:rgba(46,164,79,0.04);color:var(--text)}
+.more-item.notice i{font-size:14px}
+
+/* FOOTER */
+footer{border-top:1px solid var(--glass-stroke);margin-top:40px;padding:20px 0}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--muted);max-width:1100px;margin:0 auto;padding:0 20px}
+.footer-links{display:flex;gap:16px}
+.footer-links a{color:var(--muted);text-decoration:none;transition:color .15s}
+.footer-links a:hover{color:var(--text)}
+
+/* RESPONSIVE */
+@media(max-width:767px){
+  .menu-btn{display:flex}
+  .nav-links{display:none}
+  .hero-wrap{padding:22px 18px;gap:20px}
+  .feature-grid{grid-template-columns:1fr}
+  .screenshot-grid{grid-template-columns:repeat(3,1fr);gap:7px}
+  .stats-strip{grid-template-columns:repeat(3,1fr)}
+  .more-list{grid-template-columns:1fr}
+  .more-item.notice{grid-column:auto}
+  .join-inner{grid-template-columns:1fr}
+}
+@media(min-width:768px){
+  .hero-wrap{grid-template-columns:1fr 1fr;gap:32px;padding:36px}
+  .join-inner{grid-template-columns:1fr 1fr;gap:32px;align-items:start}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="logo">
+      <div class="logo-dot"></div>
+      GitClone
+    </div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#screenshots">Screenshots</a>
+      <a href="#download">Download</a>
+      <a href="#join">Community</a>
+      <span class="nav-badge">v1.0 Stable</span>
+    </div>
+    <button class="menu-btn" onclick="document.getElementById('mobileNav').classList.toggle('open')" aria-label="Menu">
+      <i class="fa-solid fa-bars" style="font-size:15px"></i>
+    </button>
+    <nav class="mobile-menu" id="mobileNav">
+      <a href="#features">Features</a>
+      <a href="#screenshots">Screenshots</a>
+      <a href="#download">Download</a>
+      <a href="#join">Community</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section style="padding:0 20px;margin:28px auto;max-width:1100px">
+    <div class="glass hero-wrap">
+      <div class="hero-content">
+        <div class="hero-eyebrow"><i class="fa-solid fa-shield-halved"></i> Ethical Security Toolkit</div>
+        <h2>Security learning,<br>built for <span>Android</span></h2>
+        <p class="hero-desc">Practice defensive and ethical security techniques on your Android device — URL scanners, IP analysis, OSINT tools, and interactive learning labs, all in one app.</p>
+        <div class="meta-row">
+          <div class="meta-pill"><i class="fa-solid fa-circle"></i> Stable release</div>
+          <div class="meta-pill"><i class="fa-solid fa-circle"></i> Cross-platform</div>
+          <div class="meta-pill"><i class="fa-solid fa-circle"></i> Open to feedback</div>
+        </div>
+        <div class="cta-row" id="download">
+          <a class="btn primary" href="base.apk" target="_blank">
+            <i class="fa-solid fa-download"></i> Download APK
+          </a>
+          <a class="btn outline" href="https://t.me/cyber_sniper" target="_blank">
+            <i class="fa-brands fa-telegram"></i> Community
+          </a>
+        </div>
+      </div>
+      <div>
+        <div class="terminal-card">
+          <div class="terminal-top">
+            <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+            <span style="font-size:11px;color:var(--muted);margin-left:6px">gitclone ~ terminal</span>
+          </div>
+          <div class="terminal-body">
+            <div><span class="comment">// GitClone Android v1.0</span></div>
+            <div><span class="key">app</span>       <span class="val">GitClone (Android)</span></div>
+            <div><span class="key">modules</span>   <span class="val">6 active</span></div>
+            <div>&nbsp;</div>
+            <div><span class="comment">$ modules --list</span></div>
+            <div>  <span class="val">✓</span> url-scanner</div>
+            <div>  <span class="val">✓</span> ip-analysis</div>
+            <div>  <span class="val">✓</span> phone-osint</div>
+            <div>  <span class="val">✓</span> dns-tools</div>
+            <div>  <span class="val">✓</span> port-scanner</div>
+            <div>  <span class="val">✓</span> learning-labs</div>
+            <div>&nbsp;</div>
+            <div><span class="comment">// Use for ethical & educational purposes only</span></div>
+          </div>
+          <div class="terminal-icons">
+            <i class="fa-brands fa-git-alt fa-lg" style="color:#f34f29"></i>
+            <i class="fa-brands fa-android fa-lg" style="color:#2ea44f"></i>
+            <span style="font-size:11px;color:var(--muted);margin-left:auto">Android 8.0+</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-strip">
+    <div class="stat">
+      <div class="stat-num">6</div>
+      <div class="stat-label">Modules</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">v1.0</div>
+      <div class="stat-label">Stable</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">Free</div>
+      <div class="stat-label">Open APK</div>
+    </div>
+  </div>
+
+  <!-- SCREENSHOTS -->
+  <section id="screenshots" style="padding:0 20px;margin:28px auto;max-width:1100px">
+    <div class="glass screenshots-section">
+      <div class="section-header">
+        <span class="section-title">Screenshots</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="screenshot-grid">
+        <div class="screenshot-wrap">
+          <img src="assets/screenshots/Screenshot_20260418-085225.jpg" alt="GitClone screenshot 1" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none"><i class="fa-regular fa-image"></i>Screenshot 1</div>
+        </div>
+        <div class="screenshot-wrap">
+          <img src="assets/screenshots/Screenshot_20260418-085239.jpg" alt="GitClone screenshot 2" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none"><i class="fa-regular fa-image"></i>Screenshot 2</div>
+        </div>
+        <div class="screenshot-wrap">
+          <img src="assets/screenshots/Screenshot_20260418-085258.jpg" alt="GitClone screenshot 3" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none"><i class="fa-regular fa-image"></i>Screenshot 3</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" style="padding:0 20px;margin:28px auto;max-width:1100px">
+    <div class="glass features-section">
+      <div class="section-header">
+        <span class="section-title">Features</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="feature-grid">
+        <div class="feature">
+          <div class="feature-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+          <h4>URL Scanner</h4>
+          <p>Analyze URLs for phishing, malware indicators, and unsafe redirects before you click.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><i class="fa-solid fa-network-wired"></i></div>
+          <h4>IP Lookup & Analysis</h4>
+          <p>Resolve IPs to geography, ASN, open ports, and threat intelligence indicators.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><i class="fa-solid fa-phone"></i></div>
+          <h4>Phone Number OSINT</h4>
+          <p>Lookup metadata, carrier info, and public footprint for lawful investigations.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><i class="fa-solid fa-database"></i></div>
+          <h4>DNS & Subdomain Tools</h4>
+          <p>DNS history, subdomain discovery, and zone analysis for security research.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><i class="fa-solid fa-plug"></i></div>
+          <h4>Port Scanner</h4>
+          <p>Identify exposed services and understand attack surfaces — for educational use.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+          <h4>Learning Labs</h4>
+          <p>Step-by-step interactive tutorials to practice defensive security techniques.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOIN -->
+  <section id="join" style="padding:0 20px;margin:28px auto;max-width:1100px">
+    <div class="glass join-section">
+      <div class="section-header">
+        <span class="section-title">Join the Community</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="join-inner">
+        <div class="join-left">
+          <p>Stay updated with security tips, tutorials, tool releases, and get direct support from the community.</p>
+          <div class="join-links">
+            <a href="https://t.me/cyber_sniper" target="_blank" class="link-pill tg">
+              <i class="fa-brands fa-telegram"></i> Telegram Channel
+            </a>
+            <a href="#" class="link-pill">
+              <i class="fa-solid fa-book"></i> Tutorials
+            </a>
+          </div>
+        </div>
+        <div class="join-right">
+          <p style="font-size:14px;color:var(--muted);margin-bottom:12px">Get updates by email</p>
+          <div class="join-form">
+            <input type="email" placeholder="your@email.com">
+            <button class="btn primary" type="button" style="white-space:nowrap">
+              <i class="fa-solid fa-paper-plane"></i> Subscribe
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MORE -->
+  <section style="padding:0 20px;margin:28px auto;max-width:1100px">
+    <div class="glass more-section">
+      <div class="section-header">
+        <span class="section-title">More</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="more-list">
+        <div class="more-item"><i class="fa-solid fa-book-open"></i> Documentation & tutorials</div>
+        <div class="more-item"><i class="fa-solid fa-road"></i> Roadmap & upcoming features</div>
+        <div class="more-item"><i class="fa-solid fa-code-commit"></i> Changelogs & release notes</div>
+        <div class="more-item"><i class="fa-solid fa-bug"></i> Bug reports & feedback</div>
+        <div class="more-item notice"><i class="fa-solid fa-scale-balanced"></i> <strong>Use responsibly.</strong> All tools are for ethical, educational, and lawful purposes only.</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="logo-dot"></div>
+      <span style="font-weight:600;font-size:14px">GitClone</span>
+      <span style="color:var(--muted)">© 2026</span>
+    </div>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="https://t.me/cyber_sniper" target="_blank">Telegram</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
