@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1600" viewBox="0 0 360 800">
+  <rect x="0" y="0" width="360" height="800" rx="24" fill="#0f1724" />
+  <rect x="20" y="24" width="320" height="120" rx="12" fill="#071426" />
+  <rect x="20" y="160" width="320" height="140" rx="10" fill="#081724" />
+  <rect x="20" y="310" width="320" height="120" rx="10" fill="#071224" />
+  <text x="40" y="68" fill="#9fb8c9" font-family="Inter, Arial" font-size="14">Dashboard</text>
+  <text x="40" y="190" fill="#cfe6f0" font-family="Inter, Arial" font-size="12">URL Scanner — results and reputation</text>
+  <text x="40" y="340" fill="#cfe6f0" font-family="Inter, Arial" font-size="12">IP Lookup — ASN & geo</text>
+  <rect x="40" y="460" width="280" height="44" rx="8" fill="#2ea44f" />
+  <text x="160" y="491" fill="#041714" font-family="Inter, Arial" font-size="13" text-anchor="middle">Run Scan</text>
+</svg>

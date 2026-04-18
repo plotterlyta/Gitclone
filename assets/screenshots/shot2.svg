@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1600" viewBox="0 0 360 800">
+  <rect x="0" y="0" width="360" height="800" rx="24" fill="#0f1724" />
+  <rect x="20" y="24" width="320" height="220" rx="12" fill="#081426" />
+  <text x="40" y="60" fill="#cfe6f0" font-family="Inter, Arial" font-size="14">IP Analysis</text>
+  <g fill="#9fb8c9">
+    <text x="40" y="110" font-family="Inter, Arial" font-size="12">IP: 198.51.100.23</text>
+    <text x="40" y="136" font-family="Inter, Arial" font-size="12">Country: Exampleland</text>
+    <text x="40" y="162" font-family="Inter, Arial" font-size="12">ASN: AS12345</text>
+  </g>
+  <rect x="20" y="260" width="320" height="200" rx="10" fill="#071224" />
+  <text x="40" y="300" fill="#cfe6f0" font-family="Inter, Arial" font-size="12">Open ports: 22, 80, 443</text>
+</svg>
